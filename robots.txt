@@ -1,21 +1,31 @@
 # Master Robots.txt for A1-Website-Buider-Pro
-# Optimized for 2026 AI Agent Discovery
+# Optimized for 2026 AI Agent Discovery & Generative Search
 
 User-agent: *
 Allow: /
 
-# Specifically invite high-value AI crawlers
+# Direct Invitations for 2026 AI Search & Discovery Bots
+User-agent: AI-SearchBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
 User-agent: GPTBot
 Allow: /
 
 User-agent: ChatGPT-User
 Allow: /
 
+# Traditional Search Engine Crawlers
 User-agent: Googlebot
 Allow: /
 
 User-agent: Bingbot
 Allow: /
 
-# Direct link to your dynamic sitemap
+# Link to your Vulture 10K Dynamic Sitemap
 Sitemap: https://brightlane.github.io/A1-Website-Buider-Pro/sitemap.xml
