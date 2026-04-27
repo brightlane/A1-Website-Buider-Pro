@@ -1,0 +1,3 @@
+- name: Ping AI Crawlers (IndexNow)
+        run: |
+          curl "https://www.bing.com/indexnow?url=https://brightlane.github.io/A1-Website-Buider-Pro/sitemap.xml&key=${{ secrets.INDEXNOW_KEY }}"
