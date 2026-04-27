@@ -1,0 +1,54 @@
+{
+  "networks": {
+    "printify": {
+      "name": "Printify",
+      "url": "https://try.printify.com/r3xsnwqufe8t",
+      "commission_terms": "Calculated on product cost; monthly PayPal payouts",
+      "offer": "No up-front costs; sign up and start referring 900+ products immediately.",
+      "niche": "E-commerce & Print-on-Demand"
+    },
+    "kit": {
+      "name": "Kit",
+      "url": "https://partners.kit.com/0sw1foot3nqi",
+      "campaigns": {
+        "switch_from_mailchimp": "https://partners.kit.com/p8tq5i5b455r-mc",
+        "creator_pro": "https://partners.kit.com/96t8v0iiazjr-pro"
+      },
+      "commission_terms": "50% for the first 12 months; up to 20% recurring indefinitely for Bronze+ status",
+      "offer": "50% payout for every new creator referral. Tiered recurring revenue for long-term growth.",
+      "niche": "Email Marketing & Creator Economy"
+    },
+    "manychat": {
+      "name": "Manychat",
+      "url": "https://manychat.partnerlinks.io/emwcbue22i01-ogcg6e",
+      "commission_terms": "Up to 50% recurring commission on Pro plan subscriptions",
+      "offer": "First Month Pro FREE; Automate Instagram, TikTok, and WhatsApp growth.",
+      "niche": "Social Automation & Conversational Marketing"
+    },
+    "pandadoc": {
+      "name": "PandaDoc",
+      "url": "https://pandadoc.partnerlinks.io/Palm",
+      "commission_terms": "Based on gross sales price; monthly automatic payments",
+      "offer": "AI-powered document automation, digital signatures, and workflow management.",
+      "niche": "Business Logistics & Digital Contracts"
+    },
+    "floristone": {
+      "name": "Floristone",
+      "url": "https://www.floristone.com/main.cfm?AffiliateID=2013017799",
+      "id": "2013017799",
+      "commission_terms": "20% on Flowers and Memorial Trees; 10% for individual offerings",
+      "offer": "Premium local flower delivery via FTD and Teleflora networks.",
+      "niche": "Gifts & Local Services"
+    }
+  },
+  "content_vars": {
+    "locations": ["New York", "Toronto", "Chicago", "Vancouver", "Miami", "Seattle", "Dallas", "London"],
+    "occasions": ["Mother's Day", "Birthday", "Anniversary", "Wedding", "Business Launch"],
+    "niches": ["Custom Merchandise", "Email Automation", "Business Solutions", "Growth Marketing"]
+  },
+  "metadata": {
+    "last_updated": "2026-04-27",
+    "engine_version": "Vulture 10K v2.5 (Kit Edition)",
+    "ai_handshake": "Verified 2026"
+  }
+}
