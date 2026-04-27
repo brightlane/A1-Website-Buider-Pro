@@ -1,0 +1,42 @@
+name: Daily AI Content Pulse
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Runs every night at midnight UTC
+  workflow_dispatch: # Allows you to trigger it manually from the Actions tab
+
+permissions:
+  contents: write # Essential for the bot to push the new HTML files to your repo
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install Dependencies
+        run: |
+          pip install requests
+          # Add any other dependencies your scripts need here
+
+      - name: Execute Vulture 10K Engine
+        run: python vulture_gen.py
+        # This builds all /pages and the sitemap.xml
+
+      - name: Execute Mega Blog Generator
+        run: python generate_mega_blog.py
+        # This builds the 100k word Kit authority guide
+
+      - name: Commit and Push Changes
+        run: |
+          git config --global user.name "Vulture-Pulse-Bot"
+          git config --global user.email "bot@brightlane.ai"
+          git add .
+          git commit -m "AI Pulse Update: $(date +'%Y-%m-%d') [10K Pages + Mega Blog Refreshed]" || echo "No changes to commit"
+          git push
