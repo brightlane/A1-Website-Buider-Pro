@@ -1,0 +1,57 @@
+name: Vulture 1000 Content Engine
+
+on:
+  schedule:
+    - cron: '30 2 * * *' # Runs daily at 2:30 AM UTC to avoid peak traffic
+  workflow_dispatch: # Allows you to trigger the 1,000-page build manually
+
+permissions:
+  contents: write
+
+jobs:
+  generate-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install Generation Dependencies
+        run: |
+          pip install requests
+          # Add any extra libs like 'jinja2' if your vulture script uses templates
+
+      - name: Run Vulture 1000 Script
+        run: python vulture_gen.py
+        env:
+          # If your script pulls from an API or needs a key
+          KIT_AFFILIATE_ID: ${{ secrets.KIT_ID }}
+
+      - name: Refresh Mega Blog
+        run: python generate_mega_blog.py
+
+      - name: Verify Sitemap Integrity
+        run: |
+          if [ -f sitemap.xml ]; then
+            echo "Sitemap confirmed."
+          else
+            echo "Warning: sitemap.xml missing, regenerating..."
+            python sitemap_builder.py
+          fi
+
+      - name: Deploy to GitHub Tree
+        run: |
+          git config --global user.name "Vulture-1000-Bot"
+          git config --global user.email "bot@brightlane.ai"
+          git add .
+          git commit -m "Vulture 1000 Pulse: $(date +'%Y-%m-%d') [Daily Content Refresh]" || echo "No changes detected"
+          git push
+
+      - name: Ping AI Agents
+        run: |
+          # Pings Bing and ChatGPT Search indexers
+          curl "https://www.bing.com/indexnow?url=https://brightlane.github.io/A1-Website-Buider-Pro/sitemap.xml&key=${{ secrets.INDEXNOW_KEY }}"
