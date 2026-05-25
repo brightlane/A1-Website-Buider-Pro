@@ -2,56 +2,99 @@ name: Vulture 1000 Content Engine
 
 on:
   schedule:
-    - cron: '30 2 * * *' # Runs daily at 2:30 AM UTC to avoid peak traffic
-  workflow_dispatch: # Allows you to trigger the 1,000-page build manually
+    # Daily at 2:30 AM UTC
+    - cron: '30 2 * * *'
+
+  workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
+
   generate-and-deploy:
+
     runs-on: ubuntu-latest
+
     steps:
+
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Python 3.10
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.10'
 
+      - name: Sync With Remote Repository
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+
       - name: Install Generation Dependencies
         run: |
+          python -m pip install --upgrade pip
+
           pip install requests
-          # Add any extra libs like 'jinja2' if your vulture script uses templates
+
+          # Optional dependencies
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          fi
 
       - name: Run Vulture 1000 Script
-        run: python vulture_gen.py
+        run: |
+          if [ -f vulture_gen.py ]; then
+            python vulture_gen.py
+          fi
         env:
-          # If your script pulls from an API or needs a key
           KIT_AFFILIATE_ID: ${{ secrets.KIT_ID }}
 
       - name: Refresh Mega Blog
-        run: python generate_mega_blog.py
+        run: |
+          if [ -f generate_mega_blog.py ]; then
+            python generate_mega_blog.py
+          fi
 
       - name: Verify Sitemap Integrity
         run: |
           if [ -f sitemap.xml ]; then
             echo "Sitemap confirmed."
           else
-            echo "Warning: sitemap.xml missing, regenerating..."
-            python sitemap_builder.py
+            echo "sitemap.xml missing. Regenerating..."
+
+            if [ -f sitemap_builder.py ]; then
+              python sitemap_builder.py
+            fi
           fi
 
-      - name: Deploy to GitHub Tree
+      - name: Configure Git
         run: |
           git config --global user.name "Vulture-1000-Bot"
           git config --global user.email "bot@brightlane.ai"
-          git add .
-          git commit -m "Vulture 1000 Pulse: $(date +'%Y-%m-%d') [Daily Content Refresh]" || echo "No changes detected"
-          git push
 
-      - name: Ping AI Agents
+      - name: Commit Changes
         run: |
-          # Pings Bing and ChatGPT Search indexers
-          curl "https://www.bing.com/indexnow?url=https://brightlane.github.io/A1-Website-Buider-Pro/sitemap.xml&key=${{ secrets.INDEXNOW_KEY }}"
+          git add .
+
+          git diff --cached --quiet && echo "No changes detected" && exit 0
+
+          git commit -m "Vulture 1000 Pulse: $(date +'%Y-%m-%d') [Daily Content Refresh]"
+
+      - name: Pull Latest Changes
+        run: |
+          git pull origin main --rebase
+
+      - name: Push Updates
+        run: |
+          git push origin main
+
+      - name: Ping Search Engines
+        run: |
+          if [ -f sitemap.xml ]; then
+
+            curl "https://www.bing.com/indexnow?url=https://brightlane.github.io/A1-Website-Buider-Pro/sitemap.xml&key=${{ secrets.INDEXNOW_KEY }}"
+
+          fi
